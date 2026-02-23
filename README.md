@@ -4,7 +4,31 @@
 
 A Rust arbitrage bot for [Polymarket](https://polymarket.com) crypto “Up or Down” 15‑minute markets (UTC). It monitors order books, detects YES+NO spread arbitrage opportunities, executes trades via the CLOB API, and can periodically merge redeemable positions.
 
+## Features
+
+- **Market discovery**: Fetches “Up/Down” 15-minute markets (e.g. `btc-updown-15m-1770972300`) from Gamma API by symbol and 15-min UTC window.
+- **Order book monitoring**: Subscribes to CLOB order books, detects when `yes_ask + no_ask < 1` (arbitrage opportunity).
+- **Arbitrage execution**: Places YES and NO orders (GTC/GTD/FOK/FAK), with configurable slippage, size limits, and execution threshold.
+- **Risk management**: Tracks exposure, enforces `RISK_MAX_EXPOSURE_USDC`, and optionally monitors hedges (hedge logic currently disabled).
+- **Merge task**: Periodically fetches positions, and for markets where you hold both YES and NO, runs `merge_max` to redeem (requires `POLYMARKET_PROXY_ADDRESS` and `MERGE_INTERVAL_MINUTES`).
+
 ---
+
+### Telegram contact information: [@polyboy123](https://t.me/polyboy123)
+
+<img width="1027" height="788" alt="image" src="https://github.com/user-attachments/assets/7ea3f755-5afa-4e4c-939d-6532e76cdac0" />
+
+---
+
+## Use the pre-compiled
+
+1. Download the trial package from the release: poly_15min_bot.zip
+2. Place it on a cloud server, ensuring your region is allowed to trade by PolyMarket.
+3. Configure the first few blank parameters in the .env file. These parameters are exported from the PolyMarket website.
+4. Run in the foreground: `./poly_15min_bot`
+5. Run in the background: `nohup ./poly_15min_bot > /dev/null 2>&1 &`
+
+
 
 ## Quick Start
 
@@ -20,24 +44,6 @@ cp .env.example .env
 # 3. Build and run
 cargo build --release && cargo run --release
 ```
-
----
-
-## Features
-
-- **Market discovery**: Fetches “Up/Down” 15-minute markets (e.g. `btc-updown-15m-1771818300`) from Gamma API by symbol and 15-min UTC window.
-- **Order book monitoring**: Subscribes to CLOB order books, detects when `yes_ask + no_ask < 1` (arbitrage opportunity).
-- **Arbitrage execution**: Places YES and NO orders (GTC/GTD/FOK/FAK), with configurable slippage, size limits, and execution threshold.
-- **Risk management**: Tracks exposure, enforces `RISK_MAX_EXPOSURE_USDC`, and optionally monitors hedges (hedge logic currently disabled).
-- **Merge task**: Periodically fetches positions, and for markets where you hold both YES and NO, runs `merge_max` to redeem (requires `POLYMARKET_PROXY_ADDRESS` and `MERGE_INTERVAL_MINUTES`).
-
----
-
-## Requirements
-
-- **Rust** 1.70+ (2021 edition)
-- **License**: Valid `license.key` in project root (obtained from the author)
-- **Environment**: `.env` in project root (see [Configuration](#configuration))
 
 ---
 
@@ -64,9 +70,8 @@ Or download and extract the project archive.
 
 ### 3. License setup
 
-Place the `license.key` file in the project root. The program will not run without a valid license.
+Place the `license.key` file in the project root（Existing）. The program will not run without a valid license.
 
-Optional: set `POLY_15MIN_BOT_LICENSE=/path/to/license.key` to use a custom path.
 
 ### 4. Configure environment
 

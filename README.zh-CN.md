@@ -4,7 +4,30 @@
 
 面向 [Polymarket](https://polymarket.com) 加密货币「涨跌」15 分钟市场（UTC 时间）的 Rust 套利机器人。监控订单簿、检测 YES+NO 价差套利机会、通过 CLOB API 下单，并可定时对可赎回持仓执行 merge。
 
+## 功能
+
+- **市场发现**：按币种与 15 分钟时间窗口，从 Gamma API 拉取「涨/跌」15 分钟市场（如 `btc-updown-15m-1770972300`）。
+- **订单簿监控**：订阅 CLOB 订单簿，在 `yes_ask + no_ask < 1` 时判定套利机会。
+- **套利执行**：下 YES、NO 双单（GTC/GTD/FOK/FAK），可配置滑点、单笔上限与执行价差。
+- **风险管理**：跟踪敞口、遵守 `RISK_MAX_EXPOSURE_USDC`，可选对冲监控（当前对冲逻辑已关闭）。
+- **Merge 任务**：定时拉取持仓，对 YES、NO 双边都持仓的市场执行 `merge_max` 赎回（需配置 `POLYMARKET_PROXY_ADDRESS` 与 `MERGE_INTERVAL_MINUTES`）。
+
 ---
+
+---
+### TG联系方式：[@polyboy123](https://t.me/polyboy123)
+
+<img width="1027" height="788" alt="image" src="https://github.com/user-attachments/assets/7ea3f755-5afa-4e4c-939d-6532e76cdac0" />
+
+---
+
+## 使用已经编译好的包
+### 暂时只支持Linux,最好是ubuntu24
+1. 下载release中的试用包：poly_15min_bot.zip
+2. 放到云服务器上面，需要确保所在地域能够被polymarket允许交易
+3. 配置好.env中前面的几个空白参数，参数由polymarket官网导出
+4. 前台运行：`./poly_15min_bot`
+5. 后台运行：`nohup ./poly_15min_bot > /dev/null 2>&1 &`
 
 ## 快速开始
 
@@ -20,24 +43,6 @@ cp .env.example .env
 # 3. 构建并运行
 cargo build --release && cargo run --release
 ```
-
----
-
-## 功能
-
-- **市场发现**：按币种与 15 分钟时间窗口，从 Gamma API 拉取「涨/跌」15 分钟市场（如 `btc-updown-15m-1771818300`）。
-- **订单簿监控**：订阅 CLOB 订单簿，在 `yes_ask + no_ask < 1` 时判定套利机会。
-- **套利执行**：下 YES、NO 双单（GTC/GTD/FOK/FAK），可配置滑点、单笔上限与执行价差。
-- **风险管理**：跟踪敞口、遵守 `RISK_MAX_EXPOSURE_USDC`，可选对冲监控（当前对冲逻辑已关闭）。
-- **Merge 任务**：定时拉取持仓，对 YES、NO 双边都持仓的市场执行 `merge_max` 赎回（需配置 `POLYMARKET_PROXY_ADDRESS` 与 `MERGE_INTERVAL_MINUTES`）。
-
----
-
-## 环境要求
-
-- **Rust** 1.70+（2021 edition）
-- **许可证**：项目根目录下有效的 `license.key`（需向作者获取）
-- **配置**：项目根目录的 `.env` 文件（见 [配置说明](#配置说明)）
 
 ---
 
@@ -64,9 +69,8 @@ cd Polymarket-crypto-15min-arbitrage-bot
 
 ### 3. 配置许可证
 
-将 `license.key` 文件放入项目根目录。无有效许可证程序无法运行。
+将 `license.key` 文件放入项目根目录（已存在）。无有效许可证程序无法运行。
 
-可选：设置 `POLY_15MIN_BOT_LICENSE=/path/to/license.key` 使用自定义路径。
 
 ### 4. 配置环境变量
 
